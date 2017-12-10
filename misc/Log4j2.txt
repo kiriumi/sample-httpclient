@@ -1,0 +1,11 @@
+Log4j2の使い方
+
+【インストール】
+・build.gradleのdependenciesタスクに以下を追加する
+	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.1'
+・クラスパスの通ってるフォルダに、log4j2.xmlを配置する
+
+【利用方法】
+Loggerインスタンスの生成し、使用する
+	Logger logger = LogManager.getLogger();
+	logger.info("サンプル");
