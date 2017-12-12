@@ -4,13 +4,17 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 public final class LogUtils {
 
 	/** ロガー */
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static Logger logger = LogManager.getLogger();
 
 	/**
 	 * コンストラクタ
@@ -20,44 +24,59 @@ public final class LogUtils {
 	}
 
 	/**
+	 * ログレベルを設定する
+	 * @param level ログレベル
+	 */
+	public static void setLogLevel(Level level) {
+
+		LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+		Configuration configuration = loggerContext.getConfiguration();
+		LoggerConfig loggerConfig = configuration.getLoggerConfig(CommonUtils.getClassName());
+		loggerConfig.setLevel(level);
+		loggerContext.updateLoggers();
+
+		logger = LogManager.getLogger();
+	}
+
+	/**
 	 * デバッグログの出力
 	 *
 	 * @param messageId メッセージID
 	 * @param params パラメータ
-	 * @throws ConfigurationException 設定例外
+	 * @throws ConfigurationException 設定ファイルの読込み例外
 	 */
 	public static void debug(String messageId, Object... params) throws ConfigurationException {
-		LOGGER.debug(getLogMessage(messageId), params);
+		logger.debug(getLogMessage(messageId), params);
 	}
 
 	/**
 	 * 情報ログの出力
 	 *
-	 * @param messageId
-	 * @param params
-	 * @throws ConfigurationException
+	 * @param messageId メッセージID
+	 * @param params パラメータ
+	 * @throws ConfigurationException 設定ファイルの読込み例外
 	 */
 	public static void info(String messageId, Object... params) throws ConfigurationException {
-		LOGGER.info(getLogMessage(messageId), params);
+		logger.info(getLogMessage(messageId), params);
 	}
 
 	/**
 	 * 警告ログの出力
 	 *
-	 * @param messageId
-	 * @param params
-	 * @throws ConfigurationException
+	 * @param messageId メッセージID
+	 * @param params パラメータ
+	 * @throws ConfigurationException 設定ファイルの読込み例外
 	 */
 	public static void warn(String messageId, Object... params) throws ConfigurationException {
-		LOGGER.warn(getLogMessage(messageId), params);
+		logger.warn(getLogMessage(messageId), params);
 	}
 
 	/**
 	 * エラーログの出力
 	 *
-	 * @param messageId
-	 * @param params
-	 * @throws ConfigurationException
+	 * @param messageId メッセージID
+	 * @param params パラメータ
+	 * @throws ConfigurationException 設定ファイルの読込み例外
 	 */
 	public static void error(String messageId, Object... params) throws ConfigurationException {
 
@@ -69,27 +88,15 @@ public final class LogUtils {
 			}
 		}
 
-		LOGGER.error(getLogMessage(messageId), params);
+		logger.error(getLogMessage(messageId), params);
 	}
-
-	/**
-	 * ログメッセージの取得
-	 *
-	 * @param messageId
-	 * @return message
-	 * @throws ConfigurationException
-	 */
-	private static String getLogMessage(String messageId) throws ConfigurationException {
-		return MessageUtils.getMessage(messageId);
-	}
-
 	/**
 	 * フルスタックトレースの取得
 	 *
-	 * @param e
-	 * @return fullStackTrace
+	 * @param e 例外
+	 * @return フルスタックトレース
 	 */
-	private static String getFullStackTrace(Throwable e) {
+	public static String getFullStackTrace(Throwable e) {
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
@@ -98,4 +105,17 @@ public final class LogUtils {
 
 		return sw.toString();
 	}
+
+	/**
+	 * ログメッセージの取得
+	 *
+	 * @param messageId メッセージID
+	 * @param params パラメータ
+	 * @throws ConfigurationException 設定ファイルの読込み例外
+	 */
+	private static String getLogMessage(String messageId) throws ConfigurationException {
+		return MessageUtils.getMessage(messageId);
+	}
+
+
 }

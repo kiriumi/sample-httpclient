@@ -1,3 +1,7 @@
+/*
+ * Gradleタスク：clean assemble test checkstyleMain findbugsMain jacocoTestReport javadoc
+ *
+ */
 plugins {
     id 'java'
     id 'checkstyle'
@@ -9,13 +13,12 @@ repositories {
     mavenCentral()
 }
 
-group = 'sample.httpclient'
-version = '1.0.0-SNAPSHOT'
+group = thisGroup
+version = thisVersion
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile)*.options*.encoding = defaultEncoding
 tasks.withType(GroovyCompile)*.groovyOptions*.encoding = defaultEncoding
 
@@ -33,40 +36,27 @@ dependencies {
 }
 
 compileJava {
-    sourceCompatibility=1.8
-    targetCompatibility=1.8
-    options.encoding='UTF-8'
+    options.encoding=defaultEncoding
 }
 
 compileTestJava {
-    sourceCompatibility=1.8
-    targetCompatibility=1.8
-    options.encoding='UTF-8'
+    options.encoding=defaultEncoding
 }
 
 javadoc {
-    options.charSet = 'UTF-8'
-    options.encoding = 'UTF-8'
+    options.charSet = defaultEncoding
+    options.encoding = defaultEncoding
 }
 
 test {
-	// Junitのテストが失敗しても、ビルドは成功させる
     ignoreFailures = true
 }
 
 checkstyleMain {
-    configFile = file('./check-style/sun_checks.xml')
-
-    // スタイル違反を検知しても、ビルドは成功させる
+    configFile = file(checkstyleConfig)
     ignoreFailures = true
 }
 
-checkstyleTest {
-    configFile = file('./check-style/sun_checks.xml')
-    excludes = ['**/*']
-}
-
 findbugsMain {
-	// バグを検知しても、ビルドは成功させる
     ignoreFailures = true
 }
