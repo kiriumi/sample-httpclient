@@ -22,9 +22,9 @@ public final  class MessageUtils {
 	/**
 	 * メッセージの取得
 	 *
-	 * @param messageId
-	 * @return message
-	 * @throws ConfigurationException
+	 * @param messageId メッセージID
+	 * @return message メッセージ
+	 * @throws ConfigurationException プロパティファイルの読込み例外
 	 */
 	public static String getMessage(String messageId) throws ConfigurationException {
 

@@ -3,6 +3,7 @@ package sample.httpclient.batch;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
@@ -15,21 +16,23 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
+
+import sample.httpclient.util.LogUtils;
 
 /**
  * HttpClientのサンプルクラス
+ *
  * @author Kengo
  *
  */
 public class SampleHttpClient {
 
-	private static Logger logger = LogManager.getLogger();
+	public static void main(String[] args) throws ClientProtocolException, IOException, ConfigurationException {
 
-	public static void main(String[] args) throws ClientProtocolException, IOException {
+		LogUtils.setLogLevel(Level.DEBUG);
 
-		logger.info("処理を開始します");
+		LogUtils.debug("sample");
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = createHttpPostWithPart();
@@ -44,10 +47,11 @@ public class SampleHttpClient {
 
 	}
 
+
 	/**
 	 * Partを追加したHttpPostの生成.
 	 *
-	 * @return httpPost
+	 * @return HTTPポスト
 	 */
 	private static HttpPost createHttpPostWithPart() {
 
